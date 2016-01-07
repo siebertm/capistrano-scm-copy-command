@@ -1,11 +1,8 @@
 require 'securerandom'
-namespace :middleman do
-  middleman_options = Array(fetch(:middleman_options, %w(--verbose)))
-
+namespace :scm_copy_command do
   archive_prefix              = fetch :archive_prefix, 'archive'
   archive_name                = format('%s-%s.zip', archive_prefix, SecureRandom.hex)
   build_dir                   = fetch :build_dir, 'build'
-  source_dir                  = fetch :source_dir, 'source'
   keep_filesystem_permissions = fetch :keep_filesystem_permissions, false
   directory_permissions       = fetch :directory_permissions, 2775
   file_permissions            = fetch :file_permissions, 0664
@@ -14,11 +11,11 @@ namespace :middleman do
 
   tar_roles         = fetch(:tar_roles, :all)
   desc "Archive files to #{archive_name}"
-  file archive_name => source_dir do |t|
+  file archive_name do |t|
     run_locally do
-      execute :middleman, 'build', *middleman_options
+      execute(*fetch(:command))
 
-      Capistrano::Middleman::Utils.zip(
+      Capistrano::ScmCopyCommand::Utils.zip(
         build_dir,
         t.name,
         working_directory: build_dir,
@@ -66,7 +63,7 @@ namespace :middleman do
     FileUtils.rm_rf Dir.glob(format('%s-%s.zip', archive_prefix, '*'))
   end
 
-  after 'deploy:finished', 'middleman:clean'
+  after 'deploy:finished', 'scm_copy_command:clean'
 
   task :check
   task :set_current_revision

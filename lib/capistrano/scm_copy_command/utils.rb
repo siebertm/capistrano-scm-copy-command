@@ -1,5 +1,5 @@
 module Capistrano
-  module Middleman
+  module ScmCopyCommand
     # Utils
     module Utils
       # Create zip archive from source directory
