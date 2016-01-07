@@ -13,17 +13,19 @@ namespace :scm_copy_command do
   desc "Archive files to #{archive_name}"
   file archive_name do |t|
     run_locally do
-      execute(*fetch(:build_command))
+      with revision: `git rev-parse HEAD`.strip do
+        execute(*fetch(:build_command))
 
-      Capistrano::ScmCopyCommand::Utils.zip(
-        build_dir,
-        t.name,
-        working_directory: build_dir,
-        exclude_patterns: exclude_patterns,
-        keep_filesystem_permissions: keep_filesystem_permissions,
-        directory_permissions: directory_permissions,
-        file_permissions: file_permissions
-      )
+        Capistrano::ScmCopyCommand::Utils.zip(
+          build_dir,
+          t.name,
+          working_directory: build_dir,
+          exclude_patterns: exclude_patterns,
+          keep_filesystem_permissions: keep_filesystem_permissions,
+          directory_permissions: directory_permissions,
+          file_permissions: file_permissions
+        )
+      end
     end
   end
 
@@ -66,5 +68,7 @@ namespace :scm_copy_command do
   after 'deploy:finished', 'scm_copy_command:clean'
 
   task :check
-  task :set_current_revision
+  task :set_current_revision do
+    set :current_revision, `git rev-parse HEAD`.strip
+  end
 end
