@@ -13,7 +13,7 @@ namespace :scm_copy_command do
   desc "Archive files to #{archive_name}"
   file archive_name do |t|
     run_locally do
-      execute(*fetch(:command))
+      execute(*fetch(:build_command))
 
       Capistrano::ScmCopyCommand::Utils.zip(
         build_dir,

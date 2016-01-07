@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Michael Siebert', 'Max Meyer']
   spec.email         = ['siebertm85@googlemail.com', 'dev@fedux.org']
   spec.summary       = 'General "I have a command which generates things" deploy strategy for capistrano'
-  spec.homepage      = 'https://github.com/siebertm/capistrano-scm_copy_command'
+  spec.homepage      = 'https://github.com/siebertm/capistrano-scm-copy-command'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")
